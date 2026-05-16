@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rafael Lafene — Portfólio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --accent: #c8f55a;
+      --accent2: #5af5c8;
+      --text: #e8e8e8;
+      --muted: #666;
+      --soft: #1a1a1a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.35s forwards;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-role {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 380px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+      padding: 0.8rem 1.8rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.65s forwards;
+    }
+
+    .hero-cta:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* decorative side */
+    .hero-deco {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      opacity: 0;
+      animation: fadeIn 1.2s 0.8s forwards;
+    }
+
+    .deco-card {
+      border: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .deco-card:hover { border-color: var(--accent); }
+
+    .deco-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+      transform: scaleY(0);
+      transition: transform 0.3s;
+      transform-origin: bottom;
+    }
+
+    .deco-card:hover::before { transform: scaleY(1); }
+
+    .deco-num {
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+    }
+
+    .deco-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    /* BG circle */
+    .bg-circle {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,245,90,0.06) 0%, transparent 70%);
+      top: 50%; right: -100px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-num {
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: -0.02em;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* CONTATOS */
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .contact-item {
+      background: var(--bg);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: background 0.25s;
+    }
+
+    .contact-item:hover { background: var(--soft); }
+
+    .contact-type {
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .contact-value {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .contact-value a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .contact-value a:hover { color: var(--accent); }
+
+    /* FORMAÇÃO */
+    .edu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .edu-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .edu-status {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border);
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .edu-status.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .edu-status.done {
+      color: var(--muted);
+    }
+
+    .edu-degree {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .edu-uni {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* EXPERIÊNCIA */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .exp-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding-top: 6px;
+    }
+
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .exp-line {
+      width: 1px;
+      flex: 1;
+      background: var(--border);
+      min-height: 40px;
+    }
+
+    .exp-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .exp-period {
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* HABILIDADES */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .skills-group-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    /* interpessoais */
+    .soft-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .soft-tag {
+      padding: 0.5rem 1.2rem;
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      transition: all 0.2s;
+      cursor: default;
+    }
+
+    .soft-tag:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    /* profissionais */
+    .prof-skill {
+      margin-bottom: 1.5rem;
+    }
+
+    .prof-skill-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .prof-skill-name { color: var(--text); }
+
+    .prof-skill-level {
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .skill-bar {
+      height: 2px;
+      background: var(--border);
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .skill-fill.animated { transform: scaleX(1); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+    }
+
+    footer span { color: var(--accent); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-deco { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .edu-item { grid-template-columns: 1fr; gap: 1rem; }
+      .exp-item { grid-template-columns: 30px 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">RSL</div>
+    <ul class="nav-links">
+      <li><a href="#contatos">Contatos</a></li>
+      <li><a href="#formacao">Formação</a></li>
+      <li><a href="#experiencia">Experiência</a></li>
+      <li><a href="#habilidades">Habilidades</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="bg-circle"></div>
+    <div class="hero-grid">
+      <div>
+        <div class="hero-label">// portfólio profissional</div>
+        <h1 class="hero-name">Rafael<br/><em>Silveira</em><br/>Lafene</h1>
+        <p class="hero-role">Estudante de Análise e Desenvolvimento de Sistemas · Bacharel em Ciências Contábeis · Brasília, DF</p>
+        <a href="#contatos" class="hero-cta">
+          <span>↓</span> Entre em contato
+        </a>
+      </div>
+      <div class="hero-deco">
+        <div class="deco-card">
+          <div class="deco-num">// 01</div>
+          <div class="deco-title">Formação Dupla</div>
+        </div>
+        <div class="deco-card">
+          <div class="deco-num">// 02</div>
+          <div class="deco-title">Experiência em Consultoria</div>
+        </div>
+        <div class="deco-card">
+          <div class="deco-num">// 03</div>
+          <div class="deco-title">Inglês Avançado</div>
+        </div>
+        <div class="deco-card">
+          <div class="deco-num">// 04</div>
+          <div class="deco-title">Perfil Analítico & Técnico</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTATOS -->
+  <section id="contatos">
+    <div class="section-header reveal">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Contatos</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contacts-grid reveal">
+      <div class="contact-item">
+        <span class="contact-type">// Telefone</span>
+        <span class="contact-value">(61) 99608-7928</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-type">// E-mail</span>
+        <span class="contact-value"><a href="mailto:rafaslafene@gmail.com">rafaslafene@gmail.com</a></span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-type">// LinkedIn</span>
+        <span class="contact-value">
+          <a href="https://www.linkedin.com/in/rafael-lafene-32087030a" target="_blank" rel="noopener">
+            rafael-lafene-32087030a ↗
+          </a>
+        </span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-type">// Localização</span>
+        <span class="contact-value">Brasília — DF, Brasil</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMAÇÃO -->
+  <section id="formacao">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Formação Acadêmica</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="edu-list">
+      <div class="edu-item reveal">
+        <div>
+          <span class="edu-status active">Em curso</span>
+        </div>
+        <div>
+          <div class="edu-degree">Análise e Desenvolvimento de Sistemas</div>
+          <div class="edu-uni">UniCEUB — Centro Universitário de Brasília</div>
+        </div>
+      </div>
+      <div class="edu-item reveal">
+        <div>
+          <span class="edu-status done">Concluído</span>
+        </div>
+        <div>
+          <div class="edu-degree">Bacharel em Ciências Contábeis</div>
+          <div class="edu-uni">UniCEUB — Campus Asa Norte, Brasília</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIÊNCIA -->
+  <section id="experiencia">
+    <div class="section-header reveal">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Experiência</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-list">
+
+      <div class="exp-item reveal">
+        <div class="exp-dot">
+          <div class="dot"></div>
+          <div class="exp-line"></div>
+        </div>
+        <div>
+          <div class="exp-title">Estágio Supervisionado</div>
+          <div class="exp-period">2023 — 2024 · UniCEUB</div>
+          <div class="exp-desc">Atuação como estagiário supervisionado na Universidade UniCEUB, com desenvolvimento de competências práticas na área contábil e administrativa.</div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-dot">
+          <div class="dot"></div>
+          <div class="exp-line"></div>
+        </div>
+        <div>
+          <div class="exp-title">Consultoria Empresarial</div>
+          <div class="exp-period">Kamaleão Color</div>
+          <div class="exp-desc">Prestação de serviços de consultoria para a empresa Kamaleão Color, com análise e suporte em processos de gestão e organização financeira.</div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-dot">
+          <div class="dot"></div>
+          <div class="exp-line"></div>
+        </div>
+        <div>
+          <div class="exp-title">Consultoria — Terceiro Setor</div>
+          <div class="exp-period">Abrigo Flora e Fauna</div>
+          <div class="exp-desc">Consultoria ao Abrigo Flora e Fauna, com foco em organização contábil e apoio à gestão do terceiro setor, contribuindo para o funcionamento sustentável da instituição.</div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-dot">
+          <div class="dot"></div>
+        </div>
+        <div>
+          <div class="exp-title">Rotina Contábil Auxiliar</div>
+          <div class="exp-period">Escritório de Contabilidade</div>
+          <div class="exp-desc">Suporte às atividades de rotina contábil em escritório, incluindo lançamentos, organização de documentos e auxílio em processos fiscais e financeiros.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HABILIDADES -->
+  <section id="habilidades">
+    <div class="section-header reveal">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Habilidades</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+
+      <!-- Interpessoais -->
+      <div class="reveal">
+        <div class="skills-group-title">// Interpessoais</div>
+        <div class="soft-skills">
+          <span class="soft-tag">Objetividade</span>
+          <span class="soft-tag">Rápido Aprendizado</span>
+          <span class="soft-tag">Boa Comunicação</span>
+          <span class="soft-tag">Flexibilidade</span>
+          <span class="soft-tag">Pontualidade</span>
+        </div>
+      </div>
+
+      <!-- Profissionais -->
+      <div class="reveal" id="prof-skills">
+        <div class="skills-group-title">// Profissionais</div>
+
+        <div class="prof-skill">
+          <div class="prof-skill-header">
+            <span class="prof-skill-name">Excel</span>
+            <span class="prof-skill-level">Intermediário</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="0.65"></div></div>
+        </div>
+
+        <div class="prof-skill">
+          <div class="prof-skill-header">
+            <span class="prof-skill-name">Inglês</span>
+            <span class="prof-skill-level">Avançado</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="0.88"></div></div>
+        </div>
+
+        <div class="prof-skill">
+          <div class="prof-skill-header">
+            <span class="prof-skill-name">Python</span>
+            <span class="prof-skill-level">Básico</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="0.35"></div></div>
+        </div>
+
+        <div class="prof-skill">
+          <div class="prof-skill-header">
+            <span class="prof-skill-name">Java</span>
+            <span class="prof-skill-level">Básico</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="0.30"></div></div>
+        </div>
+
+        <div class="prof-skill">
+          <div class="prof-skill-header">
+            <span class="prof-skill-name">SQL</span>
+            <span class="prof-skill-level">Básico</span>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="0.32"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>© 2025 <span>Rafael Silveira Lafene</span></div>
+    <div>Brasília — DF · Brasil</div>
+  </footer>
+
+  <script>
+    // Intersection Observer for reveal animations
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.style.transitionDelay = `${i * 0.05}s`;
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Skill bars animation
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fills = entry.target.querySelectorAll('.skill-fill');
+          fills.forEach((fill, i) => {
+            const w = parseFloat(fill.dataset.width);
+            setTimeout(() => {
+              fill.style.transform = `scaleX(${w})`;
+            }, i * 120);
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const profSection = document.getElementById('prof-skills');
+    if (profSection) barObserver.observe(profSection);
+  </script>
+</body>
+</html>
